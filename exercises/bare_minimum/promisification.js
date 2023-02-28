@@ -1,15 +1,17 @@
 /**
  * Create the promise returning `Async` suffixed versions of the functions below,
  * Promisify them if you can, otherwise roll your own promise returning function
- */ 
+ */
 
 var fs = require('fs');
 var request = require('needle');
 var crypto = require('crypto');
 var Promise = require('bluebird');
 
+var asyncFuncs = {};
+
 // (1) Asyncronous HTTP request
-var getGitHubProfile = function (user, callback) {
+asyncFuncs.getGitHubProfile = function (user, callback) {
   var url = 'https://api.github.com/users/' + user;
   var options = {
     headers: { 'User-Agent': 'request' },
@@ -29,40 +31,42 @@ var getGitHubProfile = function (user, callback) {
   });
 };
 
-var getGitHubProfileAsync; // TODO
+//var getGitHubProfileAsync; // TODO
 
 
 // (2) Asyncronous token generation
-var generateRandomToken = function(callback) {
+asyncFuncs.generateRandomToken = function(callback) {
   crypto.randomBytes(20, function(err, buffer) {
     if (err) { return callback(err, null); }
     callback(null, buffer.toString('hex'));
   });
 };
 
-var generateRandomTokenAsync; // TODO
+//var generateRandomTokenAsync; // TODO
 
 
 // (3) Asyncronous file manipulation
-var readFileAndMakeItFunny = function(filePath, callback) {
+asyncFuncs.readFileAndMakeItFunny = function(filePath, callback) {
   fs.readFile(filePath, 'utf8', function(err, file) {
+    console.log(err);
     if (err) { return callback(err); }
-   
+
     var funnyFile = file.split('\n')
       .map(function(line) {
         return line + ' lol';
       })
       .join('\n');
 
-    callback(funnyFile);
+    callback(err, funnyFile);
   });
 };
 
-var readFileAndMakeItFunnyAsync; // TODO
+//var readFileAndMakeItFunnyAsync; // TODO
+var asyncPromiseFuncs = Promise.promisifyAll(asyncFuncs);
 
 // Export these functions so we can test them and reuse them in later exercises
 module.exports = {
-  getGitHubProfileAsync: getGitHubProfileAsync,
-  generateRandomTokenAsync: generateRandomTokenAsync,
-  readFileAndMakeItFunnyAsync: readFileAndMakeItFunnyAsync
+  getGitHubProfileAsync: asyncPromiseFuncs.getGitHubProfileAsync,
+  generateRandomTokenAsync: asyncPromiseFuncs.generateRandomTokenAsync,
+  readFileAndMakeItFunnyAsync: asyncPromiseFuncs.readFileAndMakeItFunnyAsync
 };
