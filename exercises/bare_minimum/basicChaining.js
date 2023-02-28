@@ -14,7 +14,8 @@ var Promise = require('bluebird');
 
 
 var fetchProfileAndWriteToFile = function(readFilePath, writeFilePath) {
-  // TODO
+  // (1) pluckFirstLineFromFileAsync(readFilePath) -> 1st .then return promise that returns GitHub username
+  //(2) 2nd .then function that takes username as input and returns a promise with github profile data [promisification.getGitHubProfile]
 };
 
 // Export these functions so we can test them
