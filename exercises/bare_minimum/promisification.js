@@ -48,7 +48,6 @@ asyncFuncs.generateRandomToken = function(callback) {
 // (3) Asyncronous file manipulation
 asyncFuncs.readFileAndMakeItFunny = function(filePath, callback) {
   fs.readFile(filePath, 'utf8', function(err, file) {
-    console.log(err);
     if (err) { return callback(err); }
 
     var funnyFile = file.split('\n')
